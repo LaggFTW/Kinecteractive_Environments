@@ -1,0 +1,17 @@
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\KinectTest3.exe
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\KinectTest3.pdb
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Coding4Fun.Kinect.Wpf.dll
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.dll
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Microsoft.Expression.Drawing.dll
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Microsoft.Samples.Kinect.WpfViewers.pdb
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Coding4Fun.Kinect.Wpf.pdb
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.csprojResolveAssemblyReference.cache
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\MainWindow.baml
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\MainWindow.g.cs
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\App.g.cs
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3_MarkupCompile.cache
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.g.resources
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.Properties.Resources.resources
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.csproj.GenerateResource.Cache
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.exe
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.pdb
