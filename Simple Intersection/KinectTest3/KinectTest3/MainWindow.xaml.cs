@@ -82,6 +82,25 @@ namespace KinectTest3
                 int stride = depthFrame.Width * 4;
                 image1.Source = BitmapSource.Create(depthFrame.Width, depthFrame.Height,
                     96, 96, PixelFormats.Bgr32, null, pixels, stride);
+                //DEBUG
+                float elevationAngle = -kinectSensorChooser1.Kinect.ElevationAngle;
+                int x, y, depth, relX, relY;
+                float thetaX, thetaY;
+                thetaX = 28.5f;
+                thetaY = 21.5f;
+                x = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).X;
+                y = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).Y;
+                depth = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).Depth;
+                relX = (int)(((x - 320.0f) / 320.0f) * depth * System.Math.Tan(thetaX / 180.0f * System.Math.PI));
+                relY = -(int)(((y - 240.0f) / 240.0f) * depth * System.Math.Tan(thetaY / 180.0f * System.Math.PI));
+                int relXP, relYP, relZP;
+                relXP = relX;
+                relYP = (int)(relY * System.Math.Cos(elevationAngle / 180.0f * System.Math.PI) - depth * System.Math.Sin(elevationAngle / 180.0f * System.Math.PI));
+                relZP = (int)(relY * System.Math.Sin(elevationAngle / 180.0f * System.Math.PI) + depth * System.Math.Cos(elevationAngle / 180.0f * System.Math.PI));
+                //Console.WriteLine("x: " + x + "\ty: " + y);
+                //Console.WriteLine("x: " + relX + "\ty: " + relY + "\tz: " + depth + "\ttheta: " + elevationAngle);
+                Console.WriteLine("x: " + relXP + "\ty: " + relYP + "\tz: " + relZP + "\ttheta: " + elevationAngle);
+                //DEBUG
             }
 
         }
@@ -135,33 +154,39 @@ namespace KinectTest3
 
             int paintWidth = 20;
             int paintHeight = 20;
-
-            while (j < paintWidth && (width * 4 * y) + ((x + j) * 4) < (width * height * 4))
+            try
             {
-                int k = 0;
-                while (k < paintHeight && (width * 4 * (y + k)) + ((x + j) * 4) < (width * height * 4))
+                while (j < paintWidth && (width * 4 * y) + ((x + j) * 4) < (width * height * 4))
                 {
-                    int pos = (width * 4 * (y + k)) + ((x + j) * 4);
-                    pixels[pos] = 0; // the blue index
-                    pixels[pos + 1] = 0; // the red index
-                    pixels[pos + 2] = 0; // the green index
-                    k++;
+                    int k = 0;
+                    while (k < paintHeight && (width * 4 * (y + k)) + ((x + j) * 4) < (width * height * 4))
+                    {
+                        int pos = (width * 4 * (y + k)) + ((x + j) * 4);
+                        pixels[pos] = 0; // the blue index
+                        pixels[pos + 1] = 0; // the red index
+                        pixels[pos + 2] = 0; // the green index
+                        k++;
+                    }
+                    j++;
                 }
-                j++;
+                j = 0;
+                while (j < paintWidth && (width * 4 * y) + ((x - j) * 4) > (width * height * 4))
+                {
+                    int k = 0;
+                    while (k < paintHeight && (width * 4 * (y - k)) + ((x - j) * 4) < (width * height * 4))
+                    {
+                        int pos = (width * 4 * (y - k)) + ((x - j) * 4);
+                        pixels[pos] = 0; // the blue index
+                        pixels[pos + 1] = 0; // the red index
+                        pixels[pos + 2] = 0; // the green index
+                        k++;
+                    }
+                    j++;
+                }
             }
-            j = 0;
-            while (j < paintWidth && (width * 4 * y) + ((x - j) * 4) > (width * height * 4))
+            catch (IndexOutOfRangeException e)
             {
-                int k = 0;
-                while (k < paintHeight && (width * 4 * (y - k)) + ((x - j) * 4) < (width * height * 4))
-                {
-                    int pos = (width * 4 * (y - k)) + ((x - j) * 4);
-                    pixels[pos] = 0; // the blue index
-                    pixels[pos + 1] = 0; // the red index
-                    pixels[pos + 2] = 0; // the green index
-                    k++;
-                }
-                j++;
+                return null;
             }
             return pixels;
         }
@@ -217,6 +242,11 @@ namespace KinectTest3
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             StopKinect(kinectSensorChooser1.Kinect);
+        }
+
+        private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
