@@ -24,6 +24,9 @@ namespace KinectTest3
         bool closing = false;
         const int skeletonCount = 6;
         Skeleton[] allSkeletons = new Skeleton[skeletonCount];
+        int headtilt = 0;
+        int counter = 0;
+        int threshold = 5;
         public MainWindow()
         {
             InitializeComponent();
@@ -69,7 +72,6 @@ namespace KinectTest3
 
                 if (closing)
                 {
-
                     return;
                 }
                 Skeleton first = GetFirstSkeleton(e);
@@ -83,23 +85,51 @@ namespace KinectTest3
                 image1.Source = BitmapSource.Create(depthFrame.Width, depthFrame.Height,
                     96, 96, PixelFormats.Bgr32, null, pixels, stride);
                 //DEBUG
-                float elevationAngle = -kinectSensorChooser1.Kinect.ElevationAngle;
-                int x, y, depth, relX, relY;
-                float thetaX, thetaY;
-                thetaX = 28.5f;
-                thetaY = 21.5f;
-                x = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).X;
-                y = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).Y;
-                depth = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).Depth;
-                relX = (int)(((x - 320.0f) / 320.0f) * depth * System.Math.Tan(thetaX / 180.0f * System.Math.PI));
-                relY = -(int)(((y - 240.0f) / 240.0f) * depth * System.Math.Tan(thetaY / 180.0f * System.Math.PI));
-                int relXP, relYP, relZP;
-                relXP = relX;
-                relYP = (int)(relY * System.Math.Cos(elevationAngle / 180.0f * System.Math.PI) - depth * System.Math.Sin(elevationAngle / 180.0f * System.Math.PI));
-                relZP = (int)(relY * System.Math.Sin(elevationAngle / 180.0f * System.Math.PI) + depth * System.Math.Cos(elevationAngle / 180.0f * System.Math.PI));
-                //Console.WriteLine("x: " + x + "\ty: " + y);
-                //Console.WriteLine("x: " + relX + "\ty: " + relY + "\tz: " + depth + "\ttheta: " + elevationAngle);
-                Console.WriteLine("x: " + relXP + "\ty: " + relYP + "\tz: " + relZP + "\ttheta: " + elevationAngle);
+                if (counter < threshold)
+                {
+                    headtilt = headtilt + -kinectSensorChooser1.Kinect.ElevationAngle;
+                }
+                else
+                {
+                    if (counter == threshold)
+                    {
+                        headtilt = headtilt / threshold;
+                    }
+                    else
+                    {
+                        int hx, hy, hdepth, hrelX, hrelY;
+                        int rx, ry, rdepth, rrelX, rrelY;
+                        float thetaX, thetaY;
+                        thetaX = 28.5f;
+                        thetaY = 21.5f;
+                        hx = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).X;
+                        hy = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).Y;
+                        hdepth = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.Head].Position).Depth;
+                        rx = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position).X;
+                        ry = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position).Y;
+                        rdepth = depthFrame.MapFromSkeletonPoint(first.Joints[JointType.HandRight].Position).Depth;
+                        hrelX = (int)(((hx - 320.0f) / 320.0f) * hdepth * System.Math.Tan(thetaX / 180.0f * System.Math.PI));
+                        hrelY = -(int)(((hy - 240.0f) / 240.0f) * hdepth * System.Math.Tan(thetaY / 180.0f * System.Math.PI));
+                        rrelX = (int)(((rx - 320.0f) / 320.0f) * rdepth * System.Math.Tan(thetaX / 180.0f * System.Math.PI));
+                        rrelY = -(int)(((ry - 240.0f) / 240.0f) * rdepth * System.Math.Tan(thetaY / 180.0f * System.Math.PI));
+                        int hrelXP, hrelYP, hrelZP;
+                        int rrelXP, rrelYP, rrelZP;
+                        hrelXP = hrelX;
+                        rrelXP = rrelX;
+                        hrelYP = (int)(hrelY * System.Math.Cos(headtilt / 180.0f * System.Math.PI) - hdepth * System.Math.Sin(headtilt / 180.0f * System.Math.PI));
+                        hrelZP = (int)(hrelY * System.Math.Sin(headtilt / 180.0f * System.Math.PI) + hdepth * System.Math.Cos(headtilt / 180.0f * System.Math.PI));
+                        rrelYP = (int)(rrelY * System.Math.Cos(headtilt / 180.0f * System.Math.PI) - rdepth * System.Math.Sin(headtilt / 180.0f * System.Math.PI));
+                        rrelZP = (int)(rrelY * System.Math.Sin(headtilt / 180.0f * System.Math.PI) + rdepth * System.Math.Cos(headtilt / 180.0f * System.Math.PI));
+                        //Console.WriteLine("x: " + x + "\ty: " + y);
+                        //Console.WriteLine("x: " + relX + "\ty: " + relY + "\tz: " + depth + "\ttheta: " + headtilt);
+                        //Console.WriteLine("x: " + rrelXP + "\ty: " + rrelYP + "\tz: " + rrelZP + "\ttheta: " + headtilt);
+                        //textBox1.Text = "HEAD: x: " + hrelXP + "\ty: " + hrelYP + "\tz: " + hrelZP + "\ttheta: " + headtilt;
+                        //textBox2.Text = "RHAND: x: " + rrelXP + "\ty: " + rrelYP + "\tz: " + rrelZP;
+                        //Byte[] loppity = new Byte[]; TODO: figure out how to into byte array- image relations
+                        
+                    }
+                }
+                counter++;
                 //DEBUG
             }
 
@@ -244,9 +274,43 @@ namespace KinectTest3
             StopKinect(kinectSensorChooser1.Kinect);
         }
 
-        private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
+        private void textBox1_TextChanged_1(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+        private void textBox2_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void meterToPixel(double x, double y, double z, Byte[] pixels)
+        {
+            const double RATIO = 549.46;
+            int xPix, zPix;
+            xPix = getXPix(x, y, z);
+            zPix = (int)(z * RATIO);
+            xPix = 32; zPix = 32;
+            int stride = 3648 *4;
+            for (int i = 0; i < 20; i++)
+            {
+                pixels[(zPix+i) * stride + (xPix+i) * 4] = 100;
+            }
+        }
+
+        private int getXPix(double x, double y, double z)
+        {
+            const double h = 2.7432;
+            const double k = -1.5764;
+            const double r = 3.1639;
+            const int numPix = 3648;
+            double t0 = Math.Acos(-1 * h / r);
+            double t1 = Math.Asin(-1 * k / r);
+            double t = Math.Acos((x - h) / r);
+
+            double pixX = r * ((t0 - t) / (t0 - t1)) * numPix;
+
+            return ((int)pixX);
         }
     }
 }
