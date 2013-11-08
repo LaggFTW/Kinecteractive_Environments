@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Kinect;
+using InputManager;
 
 namespace KinectTest3
 {
@@ -123,10 +124,13 @@ namespace KinectTest3
                         //Console.WriteLine("x: " + x + "\ty: " + y);
                         //Console.WriteLine("x: " + relX + "\ty: " + relY + "\tz: " + depth + "\ttheta: " + headtilt);
                         //Console.WriteLine("x: " + rrelXP + "\ty: " + rrelYP + "\tz: " + rrelZP + "\ttheta: " + headtilt);
-                        //textBox1.Text = "HEAD: x: " + hrelXP + "\ty: " + hrelYP + "\tz: " + hrelZP + "\ttheta: " + headtilt;
-                        //textBox2.Text = "RHAND: x: " + rrelXP + "\ty: " + rrelYP + "\tz: " + rrelZP;
-                        //Byte[] loppity = new Byte[]; TODO: figure out how to into byte array- image relations
-                        
+                        //Console.WriteLine("HEAD: x: " + hrelXP + "\ty: " + hrelYP + "\tz: " + hrelZP + "\ttheta: " + headtilt);
+                        //Console.WriteLine("RHAND: x: " + rrelXP + "\ty: " + rrelYP + "\tz: " + rrelZP);
+                        //Console.WriteLine("HEAD: x: " + (hrelXP / 1000.0 + 2.743) + "\ty: " + ((-hrelZP / 1000.0) + 1.087) + "\tz: " + (hrelYP / 1000.0 + 0.325));
+                        //Console.WriteLine("RHAND: x: " + (rrelXP / 1000.0 + 2.743) + "\ty: " + ((-rrelZP / 1000.0) + 1.087) + "\tz: " + (rrelYP / 1000.0 + 0.325));
+                        double[] intersects = intersectionPoints(hrelXP / 1000.0 + 2.743, (-hrelZP / 1000.0) + 1.087, hrelYP / 1000.0 + 0.325, rrelXP / 1000.0 + 2.743, (-rrelZP / 1000.0) + 1.087, rrelYP / 1000.0 + 0.325);
+                        Console.WriteLine(intersects[0] + " " + intersects[1] + " " + intersects[2]);
+                        meterToPixel(intersects[0], intersects[1], intersects[2]);
                     }
                 }
                 counter++;
@@ -284,18 +288,28 @@ namespace KinectTest3
 
         }
 
-        private void meterToPixel(double x, double y, double z, Byte[] pixels)
+        private void meterToPixel(double x, double y, double z)
         {
             const double RATIO = 549.46;
             int xPix, zPix;
             xPix = getXPix(x, y, z);
             zPix = (int)(z * RATIO);
-            xPix = 32; zPix = 32;
-            int stride = 3648 *4;
-            for (int i = 0; i < 20; i++)
-            {
-                pixels[(zPix+i) * stride + (xPix+i) * 4] = 100;
-            }
+            moveCursor(xPix, zPix);
+        }
+
+        private double[] intersectionPoints(double a, double b, double c, double d, double e, double f)
+        {
+            double m = d - a;
+            double n = e - b;
+            double u = Math.Pow(m, 2) + Math.Pow(n, 2);
+            double w = Math.Pow(a - 2.7432, 2) + Math.Pow((b + 1.5764), 2) - Math.Pow(3.1639, 2);
+            double v = 2 * ((a - 2.7432) * m + (b + 1.5764) * n);
+
+            double t = (((-1) * Math.Pow(v, 2) + Math.Sqrt(Math.Pow(v, 2) - (4 * u * w))) / (2 * u));
+
+            double[] position = {(a + (d-a)*t), (b + (e-b)*t), (c + (f-c)*t)};
+          
+            return position;
         }
 
         private int getXPix(double x, double y, double z)
@@ -312,5 +326,32 @@ namespace KinectTest3
 
             return ((int)pixX);
         }
+
+        private void moveCursor(int x, int y)
+        {
+            if (x > 3648)
+            {
+                //Console.WriteLine(x);//
+                x = 3648;
+            }
+            if (x < 0)
+            {
+                //Console.WriteLine(x);//
+                x = 0;
+            }
+            if (y < 0)
+            {
+                //Console.WriteLine(y);//
+                y = 0;
+            }
+            if (y > 1200)
+            {
+                //Console.WriteLine(y);//
+                y = 1200;
+            }
+            InputManager.Mouse.Move(x + 3840, y);
+        }
+
+        
     }
 }

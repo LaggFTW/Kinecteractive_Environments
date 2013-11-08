@@ -15,3 +15,4 @@ C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj
 C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.csproj.GenerateResource.Cache
 C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.exe
 C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.pdb
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\InputManager.dll
