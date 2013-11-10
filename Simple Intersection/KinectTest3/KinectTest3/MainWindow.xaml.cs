@@ -297,19 +297,28 @@ namespace KinectTest3
             moveCursor(xPix, zPix);
         }
 
-        private double[] intersectionPoints(double a, double b, double c, double d, double e, double f)
+        private double[] intersectionPoints(double x1, double y1, double z1, double x2, double y2, double z2)
         {
-            double m = d - a;
-            double n = e - b;
-            double u = Math.Pow(m, 2) + Math.Pow(n, 2);
-            double w = Math.Pow(a - 2.7432, 2) + Math.Pow((b + 1.5764), 2) - Math.Pow(3.1639, 2);
-            double v = 2 * ((a - 2.7432) * m + (b + 1.5764) * n);
+            const double X_CENTER = 2.7432;
+            const double Y_CENTER = -1.5764;
+            const double RADIUS = 3.1639;
+            
+            double xd = x2 - x1;
+            double yd = y2 - y1;
+            double a = xd*xd + yd*yd;
+            double b = 2 * ((x1 - X_CENTER) * xd + (y1 - Y_CENTER) * yd);
+            double c = sqr(x1 - X_CENTER) + sqr(y1 - Y_CENTER) - sqr(RADIUS);
 
-            double t = (((-1) * Math.Pow(v, 2) + Math.Sqrt(Math.Pow(v, 2) - (4 * u * w))) / (2 * u));
+            double t = (-b + Math.sqrt(b*b - 4*a*c)) / (2*a);
 
-            double[] position = {(a + (d-a)*t), (b + (e-b)*t), (c + (f-c)*t)};
+            double[] position = {(x1 + (x2-x1)*t), (y1 + (y2-y1)*t), (z1 + (z2-z1)*t)};
           
             return position;
+        }
+        
+        private double sqr(double x)
+        {
+            return x*x;
         }
 
         private int getXPix(double x, double y, double z)
