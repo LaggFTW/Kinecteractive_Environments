@@ -309,7 +309,7 @@ namespace KinectTest3
             double b = 2 * ((x1 - X_CENTER) * xd + (y1 - Y_CENTER) * yd);
             double c = sqr(x1 - X_CENTER) + sqr(y1 - Y_CENTER) - sqr(RADIUS);
 
-            double t = (-b + Math.sqrt(b*b - 4*a*c)) / (2*a);
+            double t = (-b + Math.Sqrt(b*b - 4*a*c)) / (2*a);
 
             double[] position = {(x1 + (x2-x1)*t), (y1 + (y2-y1)*t), (z1 + (z2-z1)*t)};
           
