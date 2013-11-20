@@ -16,3 +16,8 @@ C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj
 C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.exe
 C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\obj\x86\Debug\KinectTest3.pdb
 C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\InputManager.dll
+C:\Users\quint\Documents\Visual Studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Microsoft.Kinect.Toolkit.Interaction.dll
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Microsoft.Kinect.Toolkit.BackgroundRemoval.dll
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Microsoft.Kinect.Toolkit.Controls.dll
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Microsoft.Kinect.Toolkit.dll
+C:\Users\quint\documents\visual studio 2010\Projects\KinectTest3\KinectTest3\bin\Debug\Microsoft.Kinect.Toolkit.Fusion.dll

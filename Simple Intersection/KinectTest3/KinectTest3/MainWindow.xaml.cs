@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Kinect;
+using Microsoft.Kinect.Toolkit;
+using Microsoft.Kinect.Toolkit.Interaction;
 using InputManager;
 
 namespace KinectTest3
@@ -21,7 +23,7 @@ namespace KinectTest3
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        
         bool closing = false;
         const int skeletonCount = 6;
         Skeleton[] allSkeletons = new Skeleton[skeletonCount];
@@ -47,7 +49,17 @@ namespace KinectTest3
             KinectSensor newSensor = (KinectSensor)e.NewValue;
             newSensor.ColorStream.Enable();
             newSensor.DepthStream.Enable();
-            newSensor.SkeletonStream.Enable();
+
+            var parameters = new TransformSmoothParameters
+            {
+                Smoothing = 0.3f,
+                Correction = 0.0f,
+                Prediction = 0.0f,
+                JitterRadius = 1.0f,
+                MaxDeviationRadius = 0.5f
+            };
+            newSensor.SkeletonStream.Enable(parameters);
+            //newSensor.SkeletonStream.Enable();
             newSensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(_sensor_AllFramesReady);
             try
             {
@@ -293,7 +305,7 @@ namespace KinectTest3
             const double RATIO = 549.46;
             int xPix, zPix;
             xPix = getXPix(x, y, z);
-            zPix = (int)(z * RATIO);
+            zPix = 1200-(int)(z * RATIO);
             moveCursor(xPix, zPix);
         }
 
@@ -302,23 +314,30 @@ namespace KinectTest3
             const double X_CENTER = 2.7432;
             const double Y_CENTER = -1.5764;
             const double RADIUS = 3.1639;
-            
+
             double xd = x2 - x1;
             double yd = y2 - y1;
-            double a = xd*xd + yd*yd;
+            double a = xd * xd + yd * yd;
             double b = 2 * ((x1 - X_CENTER) * xd + (y1 - Y_CENTER) * yd);
-            double c = sqr(x1 - X_CENTER) + sqr(y1 - Y_CENTER) - sqr(RADIUS);
+            double c = (x1 - X_CENTER) * (x1 - X_CENTER) + (y1 - Y_CENTER) * (y1 - Y_CENTER) - RADIUS * RADIUS;
 
-            double t = (-b + Math.Sqrt(b*b - 4*a*c)) / (2*a);
+            double t = (-b + Math.Sqrt(b * b - 4 * a * c)) / (2 * a);
 
-            double[] position = {(x1 + (x2-x1)*t), (y1 + (y2-y1)*t), (z1 + (z2-z1)*t)};
-          
+            double[] position = {(x1 + (x2 - x1)*t), (y1 + (y2 - y1)*t), (z1 + (z2 - z1)*t)};
+
             return position;
-        }
-        
-        private double sqr(double x)
-        {
-            return x*x;
+            //double xd = 
+            //double m = d - a;
+            //double n = e - b;
+            //double u = Math.Pow(m, 2) + Math.Pow(n, 2);
+            //double w = Math.Pow(a - 2.7432, 2) + Math.Pow((b + 1.5764), 2) - Math.Pow(3.1639, 2);
+            //double v = 2 * ((a - 2.7432) * m + (b + 1.5764) * n);
+
+            //double t = (((-1) * v + Math.Sqrt(Math.Pow(v, 2) - (4 * u * w))) / (2 * u));
+
+            //double[] position = {(a + (d-a)*t), (b + (e-b)*t), -1*(c + (f-c)*t)}; // z is flipped
+          
+            //return position;
         }
 
         private int getXPix(double x, double y, double z)
@@ -331,7 +350,7 @@ namespace KinectTest3
             double t1 = Math.Asin(-1 * k / r);
             double t = Math.Acos((x - h) / r);
 
-            double pixX = r * ((t0 - t) / (t0 - t1)) * numPix;
+            double pixX = ((t0 - t) / (t0 - t1)) * numPix;
 
             return ((int)pixX);
         }
@@ -340,22 +359,18 @@ namespace KinectTest3
         {
             if (x > 3648)
             {
-                //Console.WriteLine(x);//
                 x = 3648;
             }
             if (x < 0)
             {
-                //Console.WriteLine(x);//
                 x = 0;
             }
             if (y < 0)
             {
-                //Console.WriteLine(y);//
                 y = 0;
             }
             if (y > 1200)
             {
-                //Console.WriteLine(y);//
                 y = 1200;
             }
             InputManager.Mouse.Move(x + 3840, y);
